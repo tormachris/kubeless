@@ -1,0 +1,131 @@
+#!/bin/bash
+# @author: Daniel Keszei <keszei.daniel@gmail.com>
+# @description: Kubernetes deployer
+# @created: 2019-02-15
+# @version: 1.0
+# @origin: https://github.com/szefoka/openfaas_lab
+
+
+# Variable(s)
+
+# Script variable(s)
+PID=$$
+SCRIPTNAME="$(basename $0)"
+WORKER_LIST="worker.list"
+IP=""
+TOKEN=""
+HASH=""
+
+
+# Functions
+
+#FIXME Write usage message
+function usage {
+cat << EOF
+
+Usage: $SCRIPTNAME <CNI>
+
+Available CNI plugins:
+	* Calico
+	* Cilium
+	* Flannel
+	* WeaveNet
+
+EOF
+}
+
+## Send error messages to stderr
+function echo_err {
+	echo "Error: $@" >&2
+}
+
+function wait_for_worker {
+  while [[ "$(kubectl get nodes | grep Ready | grep none | wc -l)" -lt 1 ]];
+  do
+    sleep 1
+  done
+}
+
+function wait_for_podnetwork {
+  #podnetwork should be running on the master and at least one worker node
+  while [[ "$(kubectl get pods -n kube-system | grep weave-net | grep Running | wc -l)" -lt 2 ]];
+  do
+    sleep 1
+  done
+}
+
+## Check files from parameters
+if [ ! -f $WORKER_LIST ]; then
+	echo_err "Worker list file ($WORKER_LIST) not exists."
+	exit 1
+	else if [ ! -s $WORKER_LIST ]; then
+		echo_err "Worker list file ($WORKER_LIST) is empty."
+	fi
+fi
+
+## Check for argument
+if [ "$#" -lt 1 ]; then
+	echo_err "Missing CNI plugin name as an argument."
+	exit 1
+fi
+
+# Make the letters of the argument lowercase
+CNI=$(tr '[:upper:]' '[:lower:]'  <<< $1)
+
+## Setup Kubernetes
+./deploy/kubernetes_install.sh
+
+## Initialize Master and install CNI plugin
+case $CNI in
+	### Setup Calico
+	calico)		echo "[CNI] Installing Calico... ";
+			./deploy/calico_setup.sh;
+			echo "[CNI]" Calico installion is completed.;;
+
+	### Setup Cilium
+	cilium)		echo "[CNI] Installing Cilium... ";
+			./deploy/cilium_setup.sh;
+			echo "[CNI]" Cilium installion is completed.;;
+
+	### Setup Flannel
+	flannel)	echo "[CNI] Installing Flannel... ";
+			./deploy/flannel_setup.sh;
+			echo "[CNI]" Flannel installion is completed.;;
+
+	### Setup WeaveNet
+	weavenet)	echo "[CNI] Installing WeaveNet... ";
+			./deploy/weavenet_setup.sh;
+			echo "[CNI]" WeaveNet installion is completed.;;
+
+	### Print out help message
+	help) 		usage; exit 0;;
+
+	### Wrong argument, print error message
+	*)		echo_err "Unknown CNI plugin!";
+			exit 1;;
+esac
+
+#IP=$(ip addr sh dev $(ip ro sh | grep default | awk '{print $5}') scope global | grep inet | awk '{split($2,addresses,"/"); print addresses[1]}'):6443
+IP=$(ifconfig $(route | grep '^default' | grep -o '[^ ]*$') | grep "inet addr:" | awk '{print $2}' | cut -c6-)
+TOKEN=$(kubeadm token list | tail -n 1 | cut -d ' ' -f 1)
+HASH=sha256:$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
+
+#FIXME Do I need local docker-registry?
+./deploy/docker_registry_setup.sh $IP:5000
+
+# Join the worker nodes
+for LINE in $(cat $WORKER_LIST | grep -vE "^#"); do
+	WORKERNAME=`echo $LINE | awk -F"/" '{print $NF}'`
+
+	echo "[worker:$WORKERNAME] Deploying..."
+	ssh $WORKERNAME -o "StrictHostKeyChecking no" "bash -s" < ./deploy/kubernetes_install.sh true $IP:6443 $TOKEN $HASH
+
+	#FIXME Do I need to wait for the worker?
+	wait_for_worker
+
+	#FIXME Do I need local docker-registry?
+	ssh $WORKERNAME -o "StrictHostKeyChecking no" "bash -s" < ./deploy/docker_registry_setup.sh $IP:5000
+
+	echo "[worker:$WORKERNAME] Deployment is completed."
+done
+
