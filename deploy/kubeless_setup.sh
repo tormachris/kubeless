@@ -4,6 +4,8 @@ kubectl create ns kubeless
 kubectl create -f https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless-$RELEASE.yaml
 #kubectl create -f https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless-non-rbac-$RELEASE.yaml
 
+apt install -y unzip
+
 #kubeless command
 OS=$(uname -s| tr '[:upper:]' '[:lower:]')
 curl -OL https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless_$OS-amd64.zip && \
