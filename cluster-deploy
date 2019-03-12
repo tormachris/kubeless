@@ -129,3 +129,5 @@ for LINE in $(cat $WORKER_LIST | grep -vE "^#"); do
 	echo "[worker:$WORKERNAME] Deployment is completed."
 done
 
+#Deploy Kubeless
+./deploy/kubeless_stup.sh
