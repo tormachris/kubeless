@@ -1,7 +1,6 @@
 #!/bin/bash
 
 ## Initialize Kubernetes
-swapoff -a
 kubeadm init --ignore-preflight-errors=SystemVerification
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
