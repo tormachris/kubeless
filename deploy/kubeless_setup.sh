@@ -13,4 +13,5 @@ curl -OL https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeles
   sudo mv bundles/kubeless_$OS-amd64/kubeless /usr/local/bin/
 
 #Ingress nginx
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/baremetal/service-nodeport.yaml
