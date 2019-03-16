@@ -17,7 +17,6 @@ WORKER_LIST="worker.list"
 #FIXME Write usage message
 function usage {
 cat << EOF
-
 EOF
 
 }
@@ -28,14 +27,20 @@ function echo_err {
 }
 
 
-## Check files from parameters
+## Check file from parameters
 if [ ! -f $WORKER_LIST ]; then
 	echo_err "Worker list file ($WORKER_LIST) not exists."
 	exit 1
-	else if [ ! -s $WORKER_LIST ]; then
-		echo_err "Worker list file ($WORKER_LIST) is empty."
-	fi
 fi
+
+## Check the file contents
+if [ ! -s $WORKER_LIST ]; then
+	echo_err "Worker list file ($WORKER_LIST) is empty."
+	exit 1
+fi
+
+## Create WORKER array from file
+readarray WORKER < $WORKER_LIST
 
 # Reset Master node
 ./withdraw/node_reset.sh
