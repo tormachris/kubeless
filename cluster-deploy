@@ -131,3 +131,6 @@ done
 
 #Deploy Kubeless
 ./deploy/kubeless_stup.sh
+
+#Deploy Metric Server
+./deploy/metric_setup.sh
