@@ -25,6 +25,7 @@ then
 	cp $HOME/go/bin/hey /usr/local/bin
 fi
 
+echo -e "Benchmarking GET functions\n"
 for function in "${functions[@]}"
 do
     echo -e "Benchmarking $function\n"
@@ -49,6 +50,7 @@ do
     done
 done
 
+echo -e "Benchmarking POST functions\n"
 for function in "${data[@]}"
 do
     echo -e "Benchmarking $function\n"
