@@ -1,6 +1,6 @@
 #!/bin/bash
 
-functions=(helloget matrix)
+functions=(hello matrix)
 
 connections=(2 5 10 20 21 50 100 200 400 500 1000)
 
