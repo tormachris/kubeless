@@ -5,7 +5,7 @@ for LINE in $(cat $WORKER_LIST | grep -vE "^#"); do
 	WORKERNAME=`echo $LINE | awk -F"/" '{print $NF}'`
 
 	echo "[worker:$WORKERNAME] Updating..."
-	ssh $WORKERNAME -o "StrictHostKeyChecking no" "bash -s" < ./update.sh
+	ssh $WORKERNAME -o "StrictHostKeyChecking no" "bash -s" < ./update/update.sh
 
 	echo "[worker:$WORKERNAME] Update is completed."
 done
