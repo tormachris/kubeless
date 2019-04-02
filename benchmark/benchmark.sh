@@ -1,12 +1,10 @@
 #!/bin/bash
 
 functions=(hello matrix)
-
 connections=(2 5 10 20 50 100 200 400 500 1000)
-
 times=(10s 30s 1m 5m 15m)
-
 kuberhost="node1:32764"
+
 WRK_INSTALLED=$(which wrk)
 if [ "$WRK_INSTALLED" = "" ]
 then
