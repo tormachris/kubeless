@@ -29,7 +29,7 @@ do
     echo -e "Benchmarking $function\n"
     for connection in "${connections[@]}"
     do
-        if [[ $connection -lt 20 ]]
+        if [[ $connection -lt 21 ]]
         then
             threads=$(($connection-1))
         else
