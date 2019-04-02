@@ -12,7 +12,6 @@ then
 	git clone https://github.com/wg/wrk.git wrk
 	cd wrk
 	make
-	# move the executable to somewhere in your PATH, ex:
 	cp wrk /usr/local/bin
 fi
 
@@ -22,8 +21,7 @@ then
 	apt update
 	apt install -y golang
 	go get -u github.com/rakyll/hey
-	export GOPATH=$HOME/go
-	cp $GOPATH/bin/hey /usr/local/bin
+	cp $HOME/go/bin/hey /usr/local/bin
 fi
 
 for function in "${functions[@]}"
