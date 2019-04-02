@@ -1,7 +1,10 @@
 package kubeless
 
-import "fmt"
+import (
+	"fmt"
 
+	"github.com/kubeless/kubeless/pkg/functions"
+)
 func main() {
 	//Defining 2D matrices
 	m1 := [3][3]int{
