@@ -13,7 +13,7 @@ then
 	cd wrk
 	make
 	# move the executable to somewhere in your PATH, ex:
-	sudo cp wrk /usr/local/bin
+	cp wrk /usr/local/bin
 fi
 
 HEY_INSTALLED=$(which hey)
@@ -23,7 +23,7 @@ then
 	apt install -y golang
 	go get -u github.com/rakyll/hey
 	export GOPATH=$HOME/go
-	export PATH=$PATH:$GOPATH/bin
+	cp $GOPATH/bin/hey /usr/local/bin
 fi
 
 for function in "${functions[@]}"
