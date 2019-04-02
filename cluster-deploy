@@ -124,7 +124,7 @@ for LINE in $(cat $WORKER_LIST | grep -vE "^#"); do
 	wait_for_worker
 
 	#FIXME Do I need local docker-registry?
-	ssh $WORKERNAME -o "StrictHostKeyChecking no" "bash -s" < ./deploy/docker_registry_setup.sh $IP:5000
+	#ssh $WORKERNAME -o "StrictHostKeyChecking no" "bash -s" < ./deploy/docker_registry_setup.sh $IP:5000
 
 	echo "[worker:$WORKERNAME] Deployment is completed."
 done
