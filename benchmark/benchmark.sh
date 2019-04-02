@@ -53,7 +53,7 @@ for function in "${data[@]}"
 do
     echo -e "Benchmarking $function\n"
     echo -e "Output of $function is:\n"
-    curl --data-binary "$function.body.txt" --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/$function
+    curl --data-binary "@$function.body.txt" --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/$function
     echo -e "\n"
     for connection in "${connections[@]}"
     do
