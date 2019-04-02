@@ -46,7 +46,7 @@ then
 
 elif [ "$CLIENT" = "true" ]
 then
-	kubeadm join $IP --token $TOKEN --discovery-token-ca-cert-hash $HASH --ignore-preflight-errors=SystemVerification
+	kubeadm join $IP --token $TOKEN --discovery-token-ca-cert-hash $HASH
 	echo "Client ($IP) joined to Master"
 else
 	echo "Invalid argument"
