@@ -4,7 +4,7 @@ functions=(helloget matrix)
 
 connections=(2 5 10 20 21 50 100 200 400 500 1000)
 
-kuberhost=""
+kuberhost="node1:32764"
 
 for function in "${functions[@]}"
 do
