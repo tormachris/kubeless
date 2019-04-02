@@ -9,7 +9,7 @@ kuberhost="node1:32764"
 WRK_INSTALLED=$(which wrk)
 if [ "$WRK_INSTALLED" = "" ]
 then
-	sudo apt-get install build-essential libssl-dev git -y
+	apt-get install build-essential libssl-dev git -y
 	git clone https://github.com/wg/wrk.git wrk
 	cd wrk
 	make
