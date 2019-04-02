@@ -27,6 +27,8 @@ fi
 for function in "${functions[@]}"
 do
     echo -e "Benchmarking $function\n"
+    echo -e "Output of $function is:\n"
+    curl --header "Host: $function.cucc" --header "Content-Type:application/json" http://$kuberhost/$function
     for connection in "${connections[@]}"
     do
         if [[ $connection -lt 21 ]]
