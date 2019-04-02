@@ -55,8 +55,8 @@ for function in "${data[@]}"
 do
     echo -e "Benchmarking $function\n"
     echo -e "Output of $function is:\n"
-    perl -pi -e 'chomp if eof' $function.body.txt
-    curl --data-binary "@$function.body.txt" --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/$function
+    perl -pi -e 'chomp if eof' $function.body
+    curl --data-binary "@$function.body" --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/$function
     echo -e "\n"
     for connection in "${connections[@]}"
     do
@@ -70,8 +70,8 @@ do
 	for time in "${times[@]}"
     	do
 		echo -e "Time: $time\n"
-        	wrk -t$threads -d$time -c$connection -s$function.wrk.txt -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.txt 2>&1
+        	wrk -t$threads -d$time -c$connection -s$function.wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.txt 2>&1
         done
-	hey -n 100000000 -c $connection -o csv -m POST -host "$function.kubeless" -T "application/json" -D $function.body.txt http://$kuberhost/$function > $function.$connection.csv
+	hey -n 100000000 -c $connection -o csv -m POST -host "$function.kubeless" -T "application/json" -D $function.body http://$kuberhost/$function > $function.$connection.csv
     done
 done
