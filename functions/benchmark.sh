@@ -6,7 +6,7 @@ connections=(2 5 10 20 21 50 100 200 400 500 1000)
 
 kuberhost="node1:32764"
 WRK_INSTALLED=$(which wrk)
-if [[ "$WRK_INSTALLED" -eq "" ]]
+if [ "$WRK_INSTALLED" = "" ]
 then
 	sudo apt-get install build-essential libssl-dev git -y
 	git clone https://github.com/wg/wrk.git wrk
@@ -16,7 +16,7 @@ then
 fi
 
 HEY_INSTALLED=$(which hey)
-if [[ "$HEY_INSTALLED" -eq "" ]]
+if [ "$HEY_INSTALLED" = "" ]
 then
 	apt update
 	apt install -y golang
