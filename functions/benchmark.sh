@@ -40,6 +40,6 @@ do
         fi
         echo -e "Threads: $threads Connections $connection\n"
         wrk -t$threads -d1m -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.txt 2>&1
-        hey -n 10000 -c $connection -o csv -m GET -host "$function.kubeless" -T "application/json" http://$kuberhost/$function > $function.$connection.csv
+        hey -n 100000000 -c $connection -o csv -m GET -host "$function.kubeless" -T "application/json" http://$kuberhost/$function > $function.$connection.csv
     done
 done
