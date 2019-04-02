@@ -24,7 +24,7 @@ To install the cluster run the `./cluster-deploy <CNI>` command. A Kubernetes CN
 To undo the cluster installation run the `./cluster-withdraw` command and it will clean up the configurations on all nodes including the master as well. Command will purge all Kubernetes setups from nodes enlisted in the `worker.list` file!
 
 ### Deploy function to kubeless
-To deploy a function to kubeless run the `./function/deploy_function.sh` command with the appropriate parameters. You need to have the function available in a file next to the script.
+To deploy a function to kubeless run the `./function/deploy_function.sh <RUNTIME> <FILENAME> <FUNCTION NAME> <HANDLER NAME>` command with the appropriate parameters. You need to have the function available in a file next to the script.
 
 ### Benchmark the cluster
 Benchmarking is pretty turnkey. Edit the appropriate variables in `./benchmark/benchmark.sh` file, then run it!
