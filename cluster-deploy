@@ -130,7 +130,7 @@ for LINE in $(cat $WORKER_LIST | grep -vE "^#"); do
 done
 
 #Deploy Kubeless
-./deploy/kubeless_stup.sh
+./deploy/kubeless_setup.sh
 
 #Deploy Metric Server
 ./deploy/metric_setup.sh
