@@ -4,6 +4,8 @@ functions=(hello matrix)
 
 connections=(2 5 10 20 50 100 200 400 500 1000)
 
+times=(10s 30s 1m 5m 15m 1h)
+
 kuberhost="node1:32764"
 WRK_INSTALLED=$(which wrk)
 if [ "$WRK_INSTALLED" = "" ]
@@ -39,7 +41,10 @@ do
             threads=40
         fi
         echo -e "Threads: $threads Connections $connection\n"
-        wrk -t$threads -d1m -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.txt 2>&1
-        hey -n 100000000 -c $connection -o csv -m GET -host "$function.kubeless" -T "application/json" http://$kuberhost/$function > $function.$connection.csv
+	for time in "${times[@]}"
+    	do
+        	wrk -t$threads -d$time -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.txt 2>&1
+        done
+	hey -n 100000000 -c $connection -o csv -m GET -host "$function.kubeless" -T "application/json" http://$kuberhost/$function > $function.$connection.csv
     done
 done
