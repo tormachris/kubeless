@@ -55,10 +55,9 @@ for function in "${data[@]}"
 do
     echo -e "Benchmarking $function\n"
     echo -e "Output of $function is:\n"
+    perl -pi -e 'chomp if eof' $function.body.txt
     curl --data-binary "@$function.body.txt" --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/$function
     echo -e "\n"
-    tr -d '\n' < $function.body.txt > $function.body.txt
-    tr -d '\r' < $function.body.txt > $function.body.txt
     for connection in "${connections[@]}"
     do
         if [[ $connection -lt 41 ]]
