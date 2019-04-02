@@ -29,6 +29,7 @@ do
     echo -e "Benchmarking $function\n"
     echo -e "Output of $function is:\n"
     curl --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/$function
+    echo -e "\n"
     for connection in "${connections[@]}"
     do
         if [[ $connection -lt 21 ]]
