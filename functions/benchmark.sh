@@ -28,7 +28,7 @@ for function in "${functions[@]}"
 do
     echo -e "Benchmarking $function\n"
     echo -e "Output of $function is:\n"
-    curl --header "Host: $function.cucc" --header "Content-Type:application/json" http://$kuberhost/$function
+    curl --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/$function
     for connection in "${connections[@]}"
     do
         if [[ $connection -lt 21 ]]
@@ -38,7 +38,7 @@ do
             threads=20
         fi
         echo -e "Threads: $threads Connections $connection\n"
-        wrk -t$threads -d1m -c$connection -H"Host: $function.cucc" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.txt 2>&1
+        wrk -t$threads -d1m -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.txt 2>&1
         hey -n 10000 -c $connection -o csv -m GET -host "$function.kubeless" -T "application/json" http://$kuberhost/$function > $function.$connection.csv
     done
 done
