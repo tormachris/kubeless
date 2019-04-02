@@ -8,18 +8,22 @@ kuberhost="node1:32764"
 WRK_INSTALLED=$(which wrk)
 if [[ "$WRK_INSTALLED" -eq "" ]]
 then
-	apt update
-    apt install -y wrk
+	sudo apt-get install build-essential libssl-dev git -y
+	git clone https://github.com/wg/wrk.git wrk
+	cd wrk
+	make
+	# move the executable to somewhere in your PATH, ex:
+	sudo cp wrk /usr/local/bin
 fi
 
 HEY_INSTALLED=$(which hey)
 if [[ "$HEY_INSTALLED" -eq "" ]]
 then
 	apt update
-    apt install -y golang
-    go get -u github.com/rakyll/hey
-    export GOPATH=$HOME/go
-    export PATH=$PATH:$GOPATH/bin
+	apt install -y golang
+	go get -u github.com/rakyll/hey
+	export GOPATH=$HOME/go
+	export PATH=$PATH:$GOPATH/bin
 fi
 
 for function in "${functions[@]}"
