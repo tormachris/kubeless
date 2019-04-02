@@ -5,6 +5,22 @@ functions=(helloget matrix)
 connections=(2 5 10 20 21 50 100 200 400 500 1000)
 
 kuberhost="node1:32764"
+WRK_INSTALLED=$(which wrk)
+if [[ "$WRK_INSTALLED" -eq "" ]]
+then
+	apt update
+    apt install -y wrk
+fi
+
+HEY_INSTALLED=$(which hey)
+if [[ "$HEY_INSTALLED" -eq "" ]]
+then
+	apt update
+    apt install -y golang
+    go get -u github.com/rakyll/hey
+    export GOPATH=$HOME/go
+    export PATH=$PATH:$GOPATH/bin
+fi
 
 for function in "${functions[@]}"
 do
