@@ -2,9 +2,10 @@
 
 functions=(hello)
 connections=(2 5 10 20 50 100 200 400 500 1000)
-times=(10s 30s 1m 5m 15m)
+times=(1m)
 data=(isprime)
 kuberhost="node1:32764"
+maxthreads=160
 
 WRK_INSTALLED=$(which wrk)
 if [ "$WRK_INSTALLED" = "" ]
@@ -34,11 +35,11 @@ do
     echo -e "\n"
     for connection in "${connections[@]}"
     do
-        if [[ $connection -lt 41 ]]
+        if [[ $connection -lt $(($maxthreads + 1)) ]]
         then
             threads=$(($connection-1))
         else
-            threads=40
+            threads=$maxthreads
         fi
         echo -e "Threads: $threads Connections $connection\n"
 	for time in "${times[@]}"
@@ -60,11 +61,11 @@ do
     echo -e "\n"
     for connection in "${connections[@]}"
     do
-        if [[ $connection -lt 41 ]]
+        if [[ $connection -lt $(($maxthreads + 1)) ]]
         then
             threads=$(($connection-1))
         else
-            threads=40
+            threads=$maxthreads
         fi
         echo -e "Threads: $threads Connections $connection\n"
 	for time in "${times[@]}"
