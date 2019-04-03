@@ -13,7 +13,7 @@ array_contains () {
     return $in
 }
 
-functions=(hello)
+functions=(hello isprime)
 # 5 10 20 50 100 200 400 500 1000
 connections=(2)
 times=(1m)
