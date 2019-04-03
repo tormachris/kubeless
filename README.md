@@ -19,7 +19,7 @@ Create a `worker.list` file and add the hostname or the IP address of the worker
 
 Create a `docker.version` file containing the desired version of the docker package you would like to deploy, or alternatively run the `package-latest` command, which will create this file for you.
 
-Create a `kubernetes.version` file containing the desired version of the kubernetes package you would like to deploy, or alternatively run the `package-latest` command, which will create this file for you.
+Create a `kubernetes.version` file containing the desired version of the kubernetes package you would like to deploy, or alternatively run the `./package-latest` command, which will create this file for you.
 
 ### Deploying Kubernetes Cluster
 To install the cluster run the `./cluster-deploy <CNI>` command. A Kubernetes CNI plugin name must be given as an argument. If you give the word `help` as an argument, you will get the available CNI plugins.
