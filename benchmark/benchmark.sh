@@ -1,14 +1,15 @@
 #!/bin/bash
 
 functions=(hello)
-connections=(2 5 10 20 50 100 200 400 500 1000)
+# 5 10 20 50 100 200 400 500 1000
+connections=(2)
 times=(1m)
 data=(isprime)
 kuberhost="node1:32764"
 maxthreads=160
-wrk_options="-t$threads -d$time -c$connection -H\"Host: $function.kubeless\" -H\"Content-Type:application/json\" --latency  http://$kuberhost/$function"
+wrk_options=(-t$threads -d$time -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function)
 wrk_output=$function.$connection.$time.txt
-hey_options="-c $connection -z $time -o csv -m POST -host \"$function.kubeless\" -T \"application/json\" http://$kuberhost/$function"
+hey_options=(-c $connection -z $time -o csv -m POST -host "$function.kubeless" -T "application/json" http://$kuberhost/$function)
 hey_output=$function.$connection.$time.csv
 
 array_contains () { 
@@ -67,8 +68,8 @@ do
 	for time in "${times[@]}"
     	do
 		echo -e "Time: $time\n"
-        	wrk $wrk_options $wrk_additional_options > $wrk_output 2>&1
-		hey $hey_options $hey_additional_options > $hey_output
+        	wrk "${wrk_options[@]}" $wrk_additional_options > $wrk_output 2>&1
+		hey "${hey_options[@]}" $hey_additional_options > $hey_output
         done
     done
 done
