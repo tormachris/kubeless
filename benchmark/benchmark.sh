@@ -10,7 +10,8 @@ maxthreads=160
 WRK_INSTALLED=$(which wrk)
 if [ "$WRK_INSTALLED" = "" ]
 then
-	apt-get install build-essential libssl-dev git -y
+	apt update
+	apt install build-essential libssl-dev git -y
 	git clone https://github.com/wg/wrk.git wrk
 	cd wrk
 	make
