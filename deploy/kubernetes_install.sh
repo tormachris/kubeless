@@ -4,7 +4,8 @@ CLIENT=$1
 IP=$2
 TOKEN=$3
 HASH=$4
-
+DOCKER_VERSION=$5
+KUBERNETES_VERSION=$6
 
 #Installing Docker
 DOCKER_INSTALLED=$(which docker)
@@ -16,7 +17,7 @@ then
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 	add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 	apt-get update
-	apt-get install -y docker-ce
+	apt-get install -y docker-ce=$5
 fi
 
 
@@ -29,7 +30,7 @@ then
 	chmod 666 /etc/apt/sources.list.d/kubernetes.list
 	echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
 	apt-get update
-	apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+	apt-get install -y kubelet=$6 kubeadm=$6 kubectl=$6 kubernetes-cni=$6
 fi
 
 #Disabling swap for Kubernetes
