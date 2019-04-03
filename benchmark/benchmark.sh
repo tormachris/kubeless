@@ -6,9 +6,9 @@ times=(1m)
 data=(isprime)
 kuberhost="node1:32764"
 maxthreads=160
-wrk_options="-t$threads -d$time -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function"
+wrk_options="-t$threads -d$time -c$connection -H\"Host: $function.kubeless\" -H\"Content-Type:application/json\" --latency  http://$kuberhost/$function"
 wrk_output=$function.$connection.$time.txt
-hey_options="-c $connection -z $time -o csv -m POST -host "$function.kubeless" -T "application/json" http://$kuberhost/$function"
+hey_options="-c $connection -z $time -o csv -m POST -host \"$function.kubeless\" -T \"application/json\" http://$kuberhost/$function"
 hey_output=$function.$connection.$time.csv
 
 array_contains () { 
@@ -50,7 +50,7 @@ do
     echo -e "Benchmarking $function\n"
     echo -e "Output of $function is:\n"
     array_contains data function && perl -pi -e 'chomp if eof' $function.body
-    curl_additional_options=$(array_contains data function && "--data-binary "@$function.body"")
+    curl_additional_options=$(array_contains data function && "--data-binary \"@$function.body\"")
     curl $curl_additional_options --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/$function
     echo -e "\n"
     wrk_additional_options=$(array_contains data function && "-s$function.wrk")
