@@ -21,11 +21,7 @@ data=(isprime)
 kuberhost="node1:32764"
 maxthreads=160
 #$(array_contains data function && "-s$function.wrk") 
-wrk_options=(-t$threads -d$time -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function)
-wrk_output=$function.$connection.$time.txt
 #$(array_contains data function && "-D $function.body")
-hey_options=(-c $connection -z $time -o csv -m POST -host "$function.kubeless"  -T "application/json" http://$kuberhost/$function)
-hey_output=$function.$connection.$time.csv
 
 WRK_INSTALLED=$(which wrk)
 if [ "$WRK_INSTALLED" = "" ]
@@ -68,8 +64,8 @@ do
 	for time in "${times[@]}"
     	do
 		echo -e "Time: $time\n"
-        	wrk "${wrk_options[@]}" > ./$wrk_output 2>&1
-		hey "${hey_options[@]}" > ./$hey_output
+        	wrk -t$threads -c$connection -d$time -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.txt 2>&1
+		hey -c $connection -z $time -o csv -m POST -host "$function.kubeless"  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.csv
         done
     done
 done
