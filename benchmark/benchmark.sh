@@ -64,8 +64,8 @@ do
 	for time in "${times[@]}"
     	do
 		echo -e "Time: $time\n"
-        	wrk -t$threads -c$connection -d$time -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.txt 2>&1
-		hey -c $connection -z $time -o csv -m POST -host "$function.kubeless"  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.csv
+        	wrk -t$threads -c$connection -d$time $(array_contains data function && "-s$function.wrk") -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.txt 2>&1
+		hey -c $connection -z $time -o csv -m POST -host "$function.kubeless" $(array_contains data function && "-D $function.body")  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.csv
         done
     done
 done
