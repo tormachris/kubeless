@@ -1,5 +1,13 @@
 #!/bin/bash
 
+functions=(hello isprime)
+connections=(2 5 10 20 50 100 200 400 500 1000)
+times=(1m)
+data=(isprime)
+kuberhost="node1:32764"
+maxthreads=160
+
+
 array_contains () { 
     local array="$1[@]"
     local seeking=$2
@@ -12,16 +20,6 @@ array_contains () {
     done
     return $in
 }
-
-functions=(hello isprime)
-# 5 10 20 50 100 200 400 500 1000
-connections=(2)
-times=(1m)
-data=(isprime)
-kuberhost="node1:32764"
-maxthreads=160
-#$(array_contains data function && "-s$function.wrk") 
-#$(array_contains data function && "-D $function.body")
 
 WRK_INSTALLED=$(which wrk)
 if [ "$WRK_INSTALLED" = "" ]
