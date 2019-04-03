@@ -1,3 +1,16 @@
 #!/bin/bash
 
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+apt-get update
+
 apt-cache madison docker-ce | cut -d'|' -f2 | tr -d ' ' | head -n 1 > docker.version
+
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+touch /etc/apt/sources.list.d/kubernetes.list
+chmod 666 /etc/apt/sources.list.d/kubernetes.list
+echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
+apt-get update
+
+apt-cache madison kubelet | cut -d'|' -f2 | tr -d ' ' | head -n 1 > kubernetes.version
