@@ -8,7 +8,7 @@ kuberhost="node1:32764"
 maxthreads=160
 wrk_options="-t$threads -d$time -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function"
 wrk_output=$function.$connection.$time.txt
-hey_options="-z $time -c $connection -o csv -m POST -host "$function.kubeless" -T "application/json" http://$kuberhost/$function"
+hey_options="-c $connection -z $time -o csv -m POST -host "$function.kubeless" -T "application/json" http://$kuberhost/$function"
 hey_output=$function.$connection.$time.csv
 
 array_contains () { 
