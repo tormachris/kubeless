@@ -68,8 +68,8 @@ do
 	for time in "${times[@]}"
     	do
 		echo -e "Time: $time\n"
-        	wrk "${wrk_options[@]}" $wrk_additional_options > $wrk_output 2>&1
-		hey "${hey_options[@]}" $hey_additional_options > $hey_output
+        	wrk "${wrk_options[@]}" $wrk_additional_options > "${$wrk_output}" 2>&1
+		hey "${hey_options[@]}" $hey_additional_options > "${$hey_output}
         done
     done
 done
