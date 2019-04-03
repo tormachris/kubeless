@@ -15,7 +15,10 @@ WORKER_LIST="worker.list"
 IP=""
 TOKEN=""
 HASH=""
-
+KUBERNETES_VERFILE="kubernetes.version"
+DOCKER_VERFILE="docker.version"
+DOCKER_VERSION=$(echo $(cat $DOCKER_VERFILE)|tr -d '\n')
+KUBERNETES_VERSION=$(echo $(cat $KUBERNETES_VERFILE)|tr -d '\n')
 
 # Functions
 
@@ -63,6 +66,22 @@ if [ ! -f $WORKER_LIST ]; then
 	fi
 fi
 
+if [ ! -f $DOCKER_VERFILE ]; then
+	echo_err "Docker version file ($DOCKER_VERFILE) not exists."
+	exit 1
+	else if [ ! -s $DOCKER_VERFILE ]; then
+		echo_err "Docker version file ($DOCKER_VERFILE) is empty."
+	fi
+fi
+
+if [ ! -f $KUBERNETES_VERFILE ]; then
+	echo_err "Kubernetes version file ($DOCKER_VERFILE) not exists."
+	exit 1
+	else if [ ! -s $DOCKER_VERFILE ]; then
+		echo_err "Kubernetes version file ($DOCKER_VERFILE) is empty."
+	fi
+fi
+
 ## Check for argument
 if [ "$#" -lt 1 ]; then
 	echo_err "Missing CNI plugin name as an argument."
@@ -73,7 +92,7 @@ fi
 CNI=$(tr '[:upper:]' '[:lower:]'  <<< $1)
 
 ## Setup Kubernetes
-./deploy/kubernetes_install.sh
+./deploy/kubernetes_install.sh $DOCKER_vERSION $KUBERNETES_VERSION
 
 ## Initialize Master and install CNI plugin
 case $CNI in
@@ -118,7 +137,7 @@ for LINE in $(cat $WORKER_LIST | grep -vE "^#"); do
 	WORKERNAME=`echo $LINE | awk -F"/" '{print $NF}'`
 
 	echo "[worker:$WORKERNAME] Deploying..."
-	ssh $WORKERNAME -o "StrictHostKeyChecking no" "bash -s" < ./deploy/kubernetes_install.sh true $IP:6443 $TOKEN $HASH
+	ssh $WORKERNAME -o "StrictHostKeyChecking no" "bash -s" < ./deploy/kubernetes_install.sh $DOCKER_vERSION $KUBERNETES_VERSION true $IP:6443 $TOKEN $HASH
 
 	#FIXME Do I need to wait for the worker?
 	wait_for_worker
