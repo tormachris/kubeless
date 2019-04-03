@@ -46,8 +46,8 @@ do
     	do
 		echo -e "Time: $time\n"
         	wrk -t$threads -d$time -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.txt 2>&1
+		hey -z $time -c $connection -o csv -m POST -host "$function.kubeless" -T "application/json" http://$kuberhost/$function > $function.$connection.$time.csv
         done
-	hey -n 100000000 -c $connection -o csv -m GET -host "$function.kubeless" -T "application/json" http://$kuberhost/$function > $function.$connection.csv
     done
 done
 
@@ -72,7 +72,7 @@ do
     	do
 		echo -e "Time: $time\n"
         	wrk -t$threads -d$time -c$connection -s$function.wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.txt 2>&1
+		hey -z $time -c $connection -o csv -m POST -host "$function.kubeless" -T "application/json" -D $function.body http://$kuberhost/$function > $function.$connection.$time.csv
         done
-	hey -n 100000000 -c $connection -o csv -m POST -host "$function.kubeless" -T "application/json" -D $function.body http://$kuberhost/$function > $function.$connection.csv
     done
 done
