@@ -20,9 +20,11 @@ times=(1m)
 data=(isprime)
 kuberhost="node1:32764"
 maxthreads=160
-wrk_options=(-t$threads -d$time -c$connection $(array_contains data function && "-s$function.wrk") -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function)
+#$(array_contains data function && "-s$function.wrk") 
+wrk_options=(-t$threads -d$time -c$connection -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function)
 wrk_output=$function.$connection.$time.txt
-hey_options=(-c $connection -z $time -o csv -m POST -host "$function.kubeless" $(array_contains data function && "-D $function.body") -T "application/json" http://$kuberhost/$function)
+#$(array_contains data function && "-D $function.body")
+hey_options=(-c $connection -z $time -o csv -m POST -host "$function.kubeless"  -T "application/json" http://$kuberhost/$function)
 hey_output=$function.$connection.$time.csv
 
 WRK_INSTALLED=$(which wrk)
