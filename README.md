@@ -17,9 +17,9 @@ The commands must be run as root on the (future) master node. The SSH-key of the
 
 Create a `worker.list` file and add the hostname or the IP address of the worker nodes in it line-by-line as you can see in the example file.
 
-Create a `docker.version` containing the desired version of the docker package you would like to deploy, or alternatively run the `package-latest` command, which will create this file for you.
+Create a `docker.version` file containing the desired version of the docker package you would like to deploy, or alternatively run the `package-latest` command, which will create this file for you.
 
-Create a `kubernetes.version` containing the desired version of the kubernetes package you would like to deploy, or alternatively run the `package-latest` command, which will create this file for you.
+Create a `kubernetes.version` file containing the desired version of the kubernetes package you would like to deploy, or alternatively run the `package-latest` command, which will create this file for you.
 
 ### Deploying Kubernetes Cluster
 To install the cluster run the `./cluster-deploy <CNI>` command. A Kubernetes CNI plugin name must be given as an argument. If you give the word `help` as an argument, you will get the available CNI plugins.
