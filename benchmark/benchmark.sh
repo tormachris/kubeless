@@ -67,7 +67,7 @@ do
     	do
 		echo -e "Time: $time\n"
         	wrk "${wrk_options[@]}" > "${$wrk_output}" 2>&1
-		hey "${hey_options[@]}" > "${$hey_output}
+		hey "${hey_options[@]}" > "${$hey_output}"
         done
     done
 done
