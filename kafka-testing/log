@@ -1,7 +1,10 @@
+possible solution: 	ssh into kafka pod and check out 10broker-config.yml
+			broker nodeport not well implemented
+
 node1:
 change broker service to NodePort
 reinstall kafka
-
+add kafka-0 ip + kafka-0.broker.kubeless.svc.cluster.local to hosts -> not helping
 
 
 node4:
