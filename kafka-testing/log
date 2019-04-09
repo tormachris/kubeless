@@ -1,0 +1,51 @@
+node1:
+change broker service to NodePort
+reinstall kafka
+
+
+
+node4:
+install kafkacat
+	sudo apt-get install kafkacat
+
+command:
+	echo 'Hello World!' | kafkacat -P -b node1:30092 -t test-topic
+
+reply:
+	% ERROR: Local: Host resolution failure: kafka-0.broker.kubeless.svc.cluster.local:9092/1001: Failed to resolve 'kafka-0.broker.kubeless.svc.cluster.local:9092': Name or service not known
+% Delivery failed for message: Local: Message timed out
+
+command:
+	kafkacat -L -b node1:30092 -t test-topic
+
+rep:
+Metadata for test-topic (from broker -1: node1:30092/bootstrap):
+ 1 brokers:
+  broker 1001 at kafka-0.broker.kubeless.svc.cluster.local:9092
+ 1 topics:
+  topic "test-topic" with 1 partitions:
+    partition 0, leader 1001, replicas: 1001, isrs: 1001
+
+command: echo 'Hello World!' | kafkacat -d broker -P -b node1:30092 -t test-topic
+
+%7|1554849553.120|BRKMAIN|rdkafka#producer-1| [thrd::0/internal]: :0/internal: Enter main broker thread
+%7|1554849553.120|STATE|rdkafka#producer-1| [thrd::0/internal]: :0/internal: Broker changed state INIT -> UP
+%7|1554849553.120|BROKER|rdkafka#producer-1| [thrd:app]: node1:30092/bootstrap: Added new broker with NodeId -1
+%7|1554849553.120|BRKMAIN|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Enter main broker thread
+%7|1554849553.120|CONNECT|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: broker in state INIT connecting
+%7|1554849553.121|CONNECT|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Connecting to ipv4#10.10.1.1:30092 (plaintext) with socket 7
+%7|1554849553.121|STATE|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Broker changed state INIT -> CONNECT
+%7|1554849553.121|CONNECT|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Connected to ipv4#10.10.1.1:30092
+%7|1554849553.121|CONNECTED|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Connected (#1)
+%7|1554849553.121|FEATURE|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Updated enabled protocol features +ApiVersion to ApiVersion
+%7|1554849553.121|STATE|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Broker changed state CONNECT -> APIVERSION_QUERY
+%7|1554849553.122|FEATURE|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Updated enabled protocol features to MsgVer1,ApiVersion,BrokerBalancedConsumer,ThrottleTime,Sasl,SaslHandshake,BrokerGroupCoordinator,LZ4,OffsetTime,MsgVer2
+%7|1554849553.122|STATE|rdkafka#producer-1| [thrd:node1:30092/bootstrap]: node1:30092/bootstrap: Broker changed state APIVERSION_QUERY -> UP
+%7|1554849553.122|BROKER|rdkafka#producer-1| [thrd:main]: kafka-0.broker.kubeless.svc.cluster.local:9092/1001: Added new broker with NodeId 1001
+%7|1554849553.122|CLUSTERID|rdkafka#producer-1| [thrd:main]: node1:30092/bootstrap: ClusterId update "" -> "MtPhSSSqQaCeGu-7DPmVVw"
+%7|1554849553.122|BRKMAIN|rdkafka#producer-1| [thrd:kafka-0.broker.kubeless.svc.cluster.local:9092/1001]: kafka-0.broker.kubeless.svc.cluster.local:9092/1001: Enter main broker thread
+%7|1554849553.123|CONNECT|rdkafka#producer-1| [thrd:kafka-0.broker.kubeless.svc.cluster.local:9092/1001]: kafka-0.broker.kubeless.svc.cluster.local:9092/1001: broker in state INIT connecting
+%7|1554849553.123|BROKERFAIL|rdkafka#producer-1| [thrd:kafka-0.broker.kubeless.svc.cluster.local:9092/1001]: kafka-0.broker.kubeless.svc.cluster.local:9092/1001: failed: err: Local: Host resolution failure: (errno: Bad address)
+%7|1554849553.123|STATE|rdkafka#producer-1| [thrd:kafka-0.broker.kubeless.svc.cluster.local:9092/1001]: kafka-0.broker.kubeless.svc.cluster.local:9092/1001: Broker changed state INIT -> DOWN
+%7|1554849553.123|TOPBRK|rdkafka#producer-1| [thrd:kafka-0.broker.kubeless.svc.cluster.local:9092/1001]: kafka-0.broker.kubeless.svc.cluster.local:9092/1001: Topic test-topic [0]: joining broker (rktp 0x7f80ec001860)
+% ERROR: Local: Host resolution failure: kafka-0.broker.kubeless.svc.cluster.local:9092/1001: Failed to resolve 'kafka-0.broker.kubeless.svc.cluster.local:9092': Name or service not known
