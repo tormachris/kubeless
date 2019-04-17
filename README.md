@@ -2,7 +2,7 @@
 
 ---
 
-## Available CNI plugins (as for now)
+## Available CNI plugins
 * Calico
 * Cilium
 * Flannel
