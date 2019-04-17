@@ -1,6 +1,6 @@
 #!/bin/bash
 WORKER_LIST="worker.list"
-./update.sh
+./update/update.sh
 for LINE in $(cat $WORKER_LIST | grep -vE "^#"); do
 	WORKERNAME=`echo $LINE | awk -F"/" '{print $NF}'`
 
