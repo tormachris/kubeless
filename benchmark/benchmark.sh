@@ -1,8 +1,8 @@
 #!/bin/bash
 
-functions=(hello isprime)
-connections=(1000)
-times=(1m)
+functions=(isprime hello-scale isprime-scale)
+connections=(50)
+times=(5m)
 kuberhost="node1:32631"
 maxthreads=40
 
@@ -26,7 +26,7 @@ then
         cp $HOME/go/bin/hey /usr/local/bin
 fi
 
-echo -e "Benchmarking GET functions\n"
+echo -e "Benchmarking functions\n"
 for function in "${functions[@]}"
 do
     echo -e "Benchmarking $function\n"
@@ -46,11 +46,14 @@ do
         for time in "${times[@]}"
         do
                 echo -e "Time: $time\n"
-                echo -e "wrk"
-                wrk -t$threads -c$connection -d$time -s$function.wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.wrk.txt 2>&1
-                echo -e "hey"
-                hey -c $connection -z $time -m POST -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.hey.txt
-                date
+                echo -e "wrk\n"
+                datetime=$(date '+%Y-%m-%d-%H-%M-%S')
+                wrk -t$threads -c$connection -d$time -s$function.wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.$datetime.wrk.txt 2>&1
+                echo -e "hey-summary\n"
+                hey -c $connection -z $time -m POST -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.hey.txt
+                echo -e "hey-csv\n"
+                hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.csv
+                echo -e "$datetime"
         done
     done
 done
