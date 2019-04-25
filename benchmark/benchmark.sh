@@ -1,13 +1,16 @@
 #!/bin/bash
 
-functions=(hello)
+functions=(isprime-scale)
 connections=(50)
 times=(1m)
 kuberhost="node1:30765"
 maxthreads=40
 
+wave_connection=1
+wave_time="1m"
+
 WRK_INSTALLED=$(which wrk)
-if [[ $WRK_INSTALLED -eq "" ]]
+if [[ $WRK_INSTALLED = "" ]]
 then
         apt update
         apt install build-essential libssl-dev git -y
@@ -18,7 +21,7 @@ then
 fi
 
 HEY_INSTALLED=$(which hey)
-if [[ $HEY_INSTALLED -eq "" ]]
+if [[ $HEY_INSTALLED = "" ]]
 then
         apt update
         apt install -y golang
@@ -26,6 +29,17 @@ then
         cp $HOME/go/bin/hey /usr/local/bin
 fi
 
+if [[ $@ = *"--wave"* ]]
+then
+while true; do
+        now=$(date '+%Y-%m-%d-%H-%M')
+        echo -e "Running"
+        hey -c $wave_connection -z $wave_time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$now.wave.txt
+        echo -e "Sleeping"
+        sleep $time
+        wave_connection=wave_connection * 2
+done
+else
 echo -e "Benchmarking functions\n"
 for function in "${functions[@]}"
 do
@@ -46,23 +60,15 @@ do
         for time in "${times[@]}"
         do
                 datetime=$(date '+%Y-%m-%d-%H-%M-%S')
-                if [[ $@ -eq "*--wave*" ]]
-                then
-                        while true; do
-                                $now=$(date '+%Y-%m-%d-%H-%M')
-                                hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$now.heywave.txt
-                                sleep $time
-                        done
-                else
-                        echo -e "Time: $time\n"
-                        echo -e "wrk\n"
-                        wrk -t$threads -c$connection -d$time -s$function.wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.$datetime.wrk.txt 2>&1
-                        echo -e "hey-summary\n"
-                        hey -c $connection -z $time -m POST -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.hey.txt
-                        echo -e "hey-csv\n"
-                        hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.csv
-                        echo -e "$datetime"
-                fi
+                echo -e "Time: $time\n"
+                echo -e "wrk\n"
+                wrk -t$threads -c$connection -d$time -s$function.wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.$datetime.wrk.txt 2>&1
+                echo -e "hey-summary\n"
+                hey -c $connection -z $time -m POST -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.hey.txt
+                echo -e "hey-csv\n"
+                hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.csv
+                echo -e $datetime
         done
     done
 done
+fi
