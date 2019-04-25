@@ -48,7 +48,11 @@ do
                 datetime=$(date '+%Y-%m-%d-%H-%M-%S')
                 if [[ $@ -eq *"--wave"* ]]
                 then
-                        hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.heywave.txt
+                        while true; do
+                                $now=$(date '+%Y-%m-%d-%H-%M')
+                                hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$now.heywave.txt
+                                sleep $time
+                        done
                 else
                         echo -e "Time: $time\n"
                         echo -e "wrk\n"
