@@ -1,13 +1,13 @@
 #!/bin/bash
 
-functions=(hello isprime hello-scale isprime-scale)
+functions=(hello)
 connections=(50)
-times=(5m)
+times=(1m)
 kuberhost="node1:30765"
 maxthreads=40
 
 WRK_INSTALLED=$(which wrk)
-if [ "$WRK_INSTALLED" = "" ]
+if [[ $WRK_INSTALLED -eq "" ]]
 then
         apt update
         apt install build-essential libssl-dev git -y
@@ -18,7 +18,7 @@ then
 fi
 
 HEY_INSTALLED=$(which hey)
-if [ "$HEY_INSTALLED" = "" ]
+if [[ $HEY_INSTALLED -eq "" ]]
 then
         apt update
         apt install -y golang
@@ -46,7 +46,7 @@ do
         for time in "${times[@]}"
         do
                 datetime=$(date '+%Y-%m-%d-%H-%M-%S')
-                if [[ $@ -eq *"--wave"* ]]
+                if [[ $@ -eq "*--wave*" ]]
                 then
                         while true; do
                                 $now=$(date '+%Y-%m-%d-%H-%M')
