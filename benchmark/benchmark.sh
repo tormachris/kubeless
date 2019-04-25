@@ -1,9 +1,9 @@
 #!/bin/bash
 
-functions=(isprime hello-scale isprime-scale)
+functions=(hello isprime hello-scale isprime-scale)
 connections=(50)
 times=(5m)
-kuberhost="node1:32631"
+kuberhost="node1:30765"
 maxthreads=40
 
 WRK_INSTALLED=$(which wrk)
@@ -45,15 +45,20 @@ do
         echo -e "Threads: $threads Connections $connection\n"
         for time in "${times[@]}"
         do
-                echo -e "Time: $time\n"
-                echo -e "wrk\n"
                 datetime=$(date '+%Y-%m-%d-%H-%M-%S')
-                wrk -t$threads -c$connection -d$time -s$function.wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.$datetime.wrk.txt 2>&1
-                echo -e "hey-summary\n"
-                hey -c $connection -z $time -m POST -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.hey.txt
-                echo -e "hey-csv\n"
-                hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.csv
-                echo -e "$datetime"
+                if [[ $@ -eq *"--wave"* ]]
+                then
+                        hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.heywave.txt
+                else
+                        echo -e "Time: $time\n"
+                        echo -e "wrk\n"
+                        wrk -t$threads -c$connection -d$time -s$function.wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/$function > ./$function.$connection.$time.$datetime.wrk.txt 2>&1
+                        echo -e "hey-summary\n"
+                        hey -c $connection -z $time -m POST -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.hey.txt
+                        echo -e "hey-csv\n"
+                        hey -c $connection -z $time -m POST -o csv -host "$function.kubeless" -D $function.body  -T "application/json" http://$kuberhost/$function > ./$function.$connection.$time.$datetime.csv
+                        echo -e "$datetime"
+                fi
         done
     done
 done
