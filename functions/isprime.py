@@ -7,7 +7,6 @@ def isprime(event,context):
   r = int(n**0.5)
   f = 5
   while f <= r:
-    print '\t',f
     if n%f == 0: return "Not Prime"
     if n%(f+2) == 0: return "Not Prime"
     f +=6
