@@ -1,6 +1,5 @@
 module.exports = {
   handler: (event, context) => {
-    console.log(event);
     num=event.data;
     if (num == 1) return "Not Prime";
   num += 2;
