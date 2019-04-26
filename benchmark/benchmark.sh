@@ -41,7 +41,7 @@ do
     echo -e "Benchmarking $function\n"
     echo -e "Output of $function is:\n"
     perl -pi -e 'chomp if eof' "$function".body
-    curl --data-binary @"$function".body --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/"$function"
+    curl --data-binary @"$function_friendly".body --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/"$function"
     echo -e "\n"
     if [[ $* = *"--wave"* ]]
     then
