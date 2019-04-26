@@ -32,7 +32,7 @@ then
         cp "$HOME"/go/bin/hey /usr/local/bin
 fi
 
-if [[ $@ = *"--wave"* ]]
+if [[ $* = *"--wave"* ]]
 then
 while true; do
         now=$(date '+%Y-%m-%d-%H-%M')
