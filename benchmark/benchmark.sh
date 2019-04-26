@@ -1,17 +1,19 @@
 #!/bin/bash
+#Requirements:
+#<function name without dashes>.wrk descriptor file for wrk
+#<function name without dashes>.body (even if you don't need it)
 
+#Configuration variables
 functions=(isprime-scale isprime-scale-py isprime-scale-js hello-scale hello-scale-py hello-scale-js hello hello-js hello-py isprime isprime-js isprime-py)
 connections=(1000)
 times=(1m)
 kuberhost="node1:30765"
 maxthreads=40
-
-wave_dir_up=true
+#Wave mode configuration
 wave_connection=40
 wave_max_conn=160
 wave_min_conn=40
 wave_time="1m"
-wave_loop=1
 wave_loop_max=2
 
 WRK_INSTALLED=$(command -v wrk)
@@ -45,6 +47,8 @@ do
     echo -e "\n"
     if [[ $* = *"--wave"* ]]
     then
+        wave_loop=1
+        wave_dir_up=true
         while [[ $wave_loop -lt $wave_loop_max ]]; do
                 now=$(date '+%Y-%m-%d-%H-%M')
                 echo -e "Connections: $wave_connection"
@@ -54,14 +58,14 @@ do
                 sleep $wave_time
                 if [[ $wave_dir_up ]]
                 then
-                        if [[ $wave_connection -lt $wave_max_conn ]]
+                        if [[ $wave_connection -le $wave_max_conn ]]
                         then
                             wave_connection=$((wave_connection * 2))
                         else
                             wave_dir_up=false
                         fi
                 else
-                    if [[ $wave_connection -gt $wave_min_conn ]]
+                    if [[ $wave_connection -ge $wave_min_conn ]]
                     then
                         wave_connection=$((wave_connection / 2))
                     else
@@ -84,13 +88,22 @@ do
         do
                     datetime=$(date '+%Y-%m-%d-%H-%M-%S')
                     echo -e "Time: $time\n"
-                    echo -e "wrk\n"
-                    wrk -t$threads -c"$connection" -d"$time" -s"$function_friendly".wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".wrk.txt 2>&1
-                    echo -e "hey-summary\n"
-                    hey -c "$connection" -z "$time" -m POST -host "$function.kubeless" -D "$function_firendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".hey.txt
-                    echo -e "hey-csv\n"
-                    hey -c "$connection" -z "$time" -m POST -o csv -host "$function.kubeless" -D "$function_friendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".csv
-                    echo -e "$datetime"
+                    if [[ $* = *"--wrk"* ]]
+                    then
+                        echo -e "wrk $datetime\n"
+                        wrk -t$threads -c"$connection" -d"$time" -s"$function_friendly".wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".wrk.txt 2>&1
+                    fi
+                    if [[ $* = *"--hey"* ]]
+                    then
+                        echo -e "hey-summary $datetime\n"
+                        hey -c "$connection" -z "$time" -m POST -host "$function.kubeless" -D "$function_firendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".hey.txt
+                    fi
+                    if [[ $* = *"--csv"* ]]
+                    then
+                        echo -e "hey-csv $datetime\n"
+                        hey -c "$connection" -z "$time" -m POST -o csv -host "$function.kubeless" -D "$function_friendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".csv
+                    fi
+                    echo -e "Finished at $datetime"
             done
         done
     fi
