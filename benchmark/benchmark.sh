@@ -1,10 +1,10 @@
 #!/bin/bash
 
 functions=(isprime-scale isprime-scale-py isprime-scale-js hello-scale hello-scale-py hello-scale-js hello hello-js hello-py isprime isprime-js isprime-py)
-connections=(50)
+connections=(1000)
 times=(1m)
 kuberhost="node1:30765"
-maxthreads=160
+maxthreads=40
 
 wave_dir_up=true
 wave_connection=40
