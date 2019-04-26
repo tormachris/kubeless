@@ -8,9 +8,11 @@ maxthreads=40
 
 wave_dir_up=true
 wave_connection=40
-wave_max_conn=1600
+wave_max_conn=160
 wave_min_conn=40
 wave_time="1m"
+wave_loop=1
+wave_loop_max=2
 
 WRK_INSTALLED=$(command -v wrk)
 if [[ $WRK_INSTALLED = "" ]]
@@ -35,12 +37,13 @@ fi
 echo -e "Benchmarking functions\n"
 for function in "${functions[@]}"
 do
+    echo -e "Benchmarking $function\n"
     if [[ $* = *"--wave"* ]]
     then
-        while true; do
+        while [[ $wave_loop -lt $wave_loop_max ]]; do
                 now=$(date '+%Y-%m-%d-%H-%M')
                 echo -e "Running"
-                hey -c $wave_connection -z $wave_time -m POST -o csv -host "$function.kubeless" -D "$function".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$now".wave.txt
+                hey -c $wave_connection -z $wave_time -m POST -o csv -host "$function.kubeless" -D "$function".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$wave_connection"."$now".wave.csv
                 echo -e "Sleeping"
                 sleep $wave_time
                 if [[ $wave_dir_up ]]
@@ -57,11 +60,11 @@ do
                         wave_connection=$((wave_connection / 2))
                     else
                         wave_dir_up=true
+                        wave_loop=$((wave_loop + 1))
                     fi
                 fi
         done
     else
-        echo -e "Benchmarking $function\n"
         echo -e "Output of $function is:\n"
         perl -pi -e 'chomp if eof' "$function".body
         curl --data-binary @"$function".body --header "Host: $function.kubeless" --header "Content-Type:application/json" http://$kuberhost/"$function"
