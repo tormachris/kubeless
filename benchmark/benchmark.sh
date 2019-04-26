@@ -37,7 +37,7 @@ fi
 echo -e "Benchmarking functions\n"
 for function in "${functions[@]}"
 do
-    function_friendly=$(echo $function | cut - -d'-' -t1)
+    function_friendly=$(echo $function | cut - -d'-' -f1)
     echo -e "Benchmarking $function\n"
     if [[ $* = *"--wave"* ]]
     then
