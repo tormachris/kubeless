@@ -59,7 +59,7 @@ do
                         if [[ $wave_connection -lt $wave_max_conn ]]
                         then
                             echo -e "Stepping up"
-                            wave_connection=$((wave_connection * 2))
+                            wave_connection=$((wave_connection * 5))
                         else
                             echo -e "Not stepping"
                             wave_dir_up=false
@@ -68,7 +68,7 @@ do
                     if [[ $wave_connection -gt $wave_min_conn ]]
                     then
                         echo -e "Stepping down"
-                        wave_connection=$((wave_connection / 2))
+                        wave_connection=$((wave_connection / 5))
                     else
                         echo -e "Not stepping"
                         wave_dir_up=true
