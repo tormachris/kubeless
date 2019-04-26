@@ -6,6 +6,7 @@ times=(1m)
 kuberhost="node1:30765"
 maxthreads=40
 
+wave_function=isprime
 wave_dir_up=true
 wave_connection=40
 wave_max_conn=1600
@@ -37,9 +38,9 @@ then
 while true; do
         now=$(date '+%Y-%m-%d-%H-%M')
         echo -e "Running"
-        hey -c $wave_connection -z $wave_time -m POST -o csv -host "$function.kubeless" -D "$function".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$now".wave.txt
+        hey -c $wave_connection -z $wave_time -m POST -o csv -host "$wave_function.kubeless" -D "$wave_function".body  -T "application/json" http://$kuberhost/"$wave_function" > ./"$wave_function"."$now".wave.txt
         echo -e "Sleeping"
-        sleep "$time"
+        sleep $wave_time
         if [[ $wave_dir_up ]]
         then
                 if [[ $wave_connection -lt $wave_max_conn ]]
