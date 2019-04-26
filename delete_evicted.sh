@@ -1,5 +1,3 @@
 #!/bin/bash
-for each in $(kubectl get pods|grep Evicted|awk '{print $1}');
-do
-  kubectl delete pods $each
-done
+
+kubectl get po --all-namespaces | awk '{if ($4 ~ /Evicted/) system ("kubectl -n " $1 " delete pods " $2)}'
