@@ -56,7 +56,7 @@ do
                 hey -c $wave_connection -z $wave_time -m POST -o csv -host "$function.kubeless" -D "$function_friendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$wave_connection"."$now".wave.csv
                 if [[ $wave_dir_up ]]
                 then
-                        if [[ $wave_connection -le $wave_max_conn ]]
+                        if [[ $wave_connection -lt $wave_max_conn ]]
                         then
                             echo -e "Stepping up"
                             wave_connection=$((wave_connection * 2))
@@ -65,7 +65,7 @@ do
                             wave_dir_up=false
                         fi
                 else
-                    if [[ $wave_connection -ge $wave_min_conn ]]
+                    if [[ $wave_connection -gt $wave_min_conn ]]
                     then
                         echo -e "Stepping down"
                         wave_connection=$((wave_connection / 2))
