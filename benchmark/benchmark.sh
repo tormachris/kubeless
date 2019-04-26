@@ -54,8 +54,6 @@ do
                 echo -e "Connections: $wave_connection"
                 echo -e "Running"
                 hey -c $wave_connection -z $wave_time -m POST -o csv -host "$function.kubeless" -D "$function_friendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$wave_connection"."$now".wave.csv
-                echo -e "Sleeping"
-                sleep $wave_time
                 if [[ $wave_dir_up ]]
                 then
                         if [[ $wave_connection -le $wave_max_conn ]]
