@@ -40,7 +40,7 @@ def processFile(fname):
         print("Minimum response time was ",minResponse)
         pprint(responseCodes)
         pprint(responsePerSec)
-        
+
 def processAllFiles():
     files=getFiles()
     for f in files:
