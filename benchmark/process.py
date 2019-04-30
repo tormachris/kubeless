@@ -30,7 +30,7 @@ def processor(lines):
     maxResponse=max(responseTimes)
     minResponse=min(responseTimes)
     for line in lines:
-        sec=line['offset'][0]
+        sec=int(line['offset'].split('.')[0])
         if sec not in responsePerSec:
             responsePerSec[sec]=1
         else:
