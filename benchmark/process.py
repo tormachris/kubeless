@@ -15,43 +15,37 @@ def processFile(fname):
         lines=[]
         data=csv.reader(f)
         fields=next(data)
+        responseCodes={}
+        responsePerSec={}
+        responseTimes=[]
         for row in data:
             items=zip(fields,row)
             item={}
             for(name,value) in items:
                 item[name]=value.strip()
-            lines.append(item)
-        return lines
-
-def processor(lines):
-    responseCodes={}
-    responsePerSec={}
-    responseTimes=[]
-    for line in lines:
-        sec=int(line['offset'].split('.')[0])
-        if sec not in responsePerSec:
-            responsePerSec[sec]=1
-        else:
-            responsePerSec[sec]=responsePerSec[sec]+1
-        code=line['status-code']
-        if code not in responseCodes:
-            responseCodes[code]=1
-        else:
-            responseCodes[code]=responseCodes[code]+1
-        responseTimes.append(line['response-time'])
-    maxResponse=max(responseTimes)
-    minResponse=min(responseTimes)
-    print("Maximum response time was ",maxResponse)
-    print("Minimum response time was ",minResponse)
-    pprint(responseCodes)
-    pprint(responsePerSec)
-
+            sec=int(item['offset'].split('.')[0])
+            if sec not in responsePerSec:
+                responsePerSec[sec]=1
+            else:
+                responsePerSec[sec]=responsePerSec[sec]+1
+            code=item['status-code']
+            if code not in responseCodes:
+                responseCodes[code]=1
+            else:
+                responseCodes[code]=responseCodes[code]+1
+            responseTimes.append(item['response-time'])
+        maxResponse=max(responseTimes)
+        minResponse=min(responseTimes)
+        print("Maximum response time was ",maxResponse)
+        print("Minimum response time was ",minResponse)
+        pprint(responseCodes)
+        pprint(responsePerSec)
+        
 def processAllFiles():
     files=getFiles()
     for f in files:
         print("Processing ", f)
-        lines=processFile(f)
-        processor(lines)
+        processFile(f)
 
 if __name__ == "__main__":
     processAllFiles()
