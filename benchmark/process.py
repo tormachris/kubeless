@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import csv
 import os
-import pprint
+from pprint import pprint
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -11,10 +11,10 @@ def getFiles():
     return[ f for f in files if f.endswith('.csv') ]
 
 def processFile(fname):
-    with open(fname) as f:
+    with open(fname,'r') as f:
         lines=[]
         data=csv.reader(f)
-        fields=data.next()
+        fields=next(data)
         for row in data:
             items=zip(fields,row)
             item={}
@@ -26,28 +26,29 @@ def processFile(fname):
 def processor(lines):
     responseCodes={}
     responsePerSec={}
-    responesTimes=[line['response-time'] for line in lines]
-    maxResponse=max(responesTimes)
-    minResponse=min(responesTimes)
+    responseTimes=[line['response-time'] for line in lines]
+    maxResponse=max(responseTimes)
+    minResponse=min(responseTimes)
     for line in lines:
-        sec=line['response-time'] // 1
-        if responsePerSec[sec] == None:
+        sec=line['offset'][0]
+        if sec not in responsePerSec:
             responsePerSec[sec]=1
         else:
             responsePerSec[sec]=responsePerSec[sec]+1
         code=line['status-code']
-        if responseCodes[code]==None:
+        if code not in responseCodes:
             responseCodes[code]=1
         else:
             responseCodes[code]=responseCodes[code]+1
     print("Maximum response time was ",maxResponse)
     print("Minimum response time was ",minResponse)
     pprint(responseCodes)
-    pprint(responesTimes)
+    pprint(responsePerSec)
 
 def processAllFiles():
     files=getFiles()
     for f in files:
+        print("Processing ", f)
         lines=processFile(f)
         processor(lines)
 
