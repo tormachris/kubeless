@@ -26,9 +26,7 @@ def processFile(fname):
 def processor(lines):
     responseCodes={}
     responsePerSec={}
-    responseTimes=[line['response-time'] for line in lines]
-    maxResponse=max(responseTimes)
-    minResponse=min(responseTimes)
+    responseTimes=[]
     for line in lines:
         sec=int(line['offset'].split('.')[0])
         if sec not in responsePerSec:
@@ -40,6 +38,9 @@ def processor(lines):
             responseCodes[code]=1
         else:
             responseCodes[code]=responseCodes[code]+1
+        responseTimes.append(line['response-time'])
+    maxResponse=max(responseTimes)
+    minResponse=min(responseTimes)
     print("Maximum response time was ",maxResponse)
     print("Minimum response time was ",minResponse)
     pprint(responseCodes)
