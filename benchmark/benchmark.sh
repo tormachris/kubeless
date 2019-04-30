@@ -53,7 +53,7 @@ do
                 now=$(date '+%Y-%m-%d-%H-%M')
                 echo -e "Connections: $wave_connection"
                 echo -e "Running"
-                hey -c $wave_connection -z $wave_time -m POST -o csv -host "$function.kubeless" -D "$function_friendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$wave_connection"."$now".wave.csv
+                hey -c $wave_connection -z $wave_time -m POST -o csv -host "$function.kubeless" -D "$function_friendly".body  -T "application/json" http://$kuberhost/"$function" > ./data/"$function"."$wave_connection"."$now".wave.csv
                 if $wave_dir_up
                 then
                         if [[ $wave_connection -lt $wave_max_conn ]]
@@ -93,17 +93,17 @@ do
                     if [[ $* = *"--wrk"* ]]
                     then
                         echo -e "wrk $datetime\n"
-                        wrk -t$threads -c"$connection" -d"$time" -s"$function_friendly".wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".wrk.txt 2>&1
+                        wrk -t$threads -c"$connection" -d"$time" -s"$function_friendly".wrk -H"Host: $function.kubeless" -H"Content-Type:application/json" --latency  http://$kuberhost/"$function" > ./data/"$function"."$connection"."$time"."$datetime".wrk.txt 2>&1
                     fi
                     if [[ $* = *"--hey"* ]]
                     then
                         echo -e "hey-summary $datetime\n"
-                        hey -c "$connection" -z "$time" -m POST -host "$function.kubeless" -D "$function_firendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".hey.txt
+                        hey -c "$connection" -z "$time" -m POST -host "$function.kubeless" -D "$function_firendly".body  -T "application/json" http://$kuberhost/"$function" > ./data/"$function"."$connection"."$time"."$datetime".hey.txt
                     fi
                     if [[ $* = *"--csv"* ]]
                     then
                         echo -e "hey-csv $datetime\n"
-                        hey -c "$connection" -z "$time" -m POST -o csv -host "$function.kubeless" -D "$function_friendly".body  -T "application/json" http://$kuberhost/"$function" > ./"$function"."$connection"."$time"."$datetime".csv
+                        hey -c "$connection" -z "$time" -m POST -o csv -host "$function.kubeless" -D "$function_friendly".body  -T "application/json" http://$kuberhost/"$function" > ./data/"$function"."$connection"."$time"."$datetime".csv
                     fi
                     echo -e "Finished at $datetime"
             done
