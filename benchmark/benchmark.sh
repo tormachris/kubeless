@@ -110,3 +110,5 @@ do
         done
     fi
 done
+
+python3 ./data/process.py > ./data/processed.txt
