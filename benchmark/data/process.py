@@ -25,9 +25,9 @@ def processFile(fname):
                 item[name]=value.strip()
             sec=int(item['offset'].split('.')[0])
             if sec not in responsePerSec:
-                responsePerSec[sec]=1
+                responsePerSec[sec]=[]
             else:
-                responsePerSec[sec]=responsePerSec[sec]+1
+                responsePerSec[sec].append(item['response-time'])
             code=item['status-code']
             if code not in responseCodes:
                 responseCodes[code]=1
@@ -39,7 +39,11 @@ def processFile(fname):
         print("Maximum response time was ",maxResponse)
         print("Minimum response time was ",minResponse)
         pprint(responseCodes)
-        pprint(responsePerSec)
+        for sec in responsePerSec:
+            print(sec, ":")
+            print("    Maximum:", max(responsePerSec[sec]))
+            print("    Minimum:", min(responsePerSec[sec]))
+            print("    Num of responses:", len(responsePerSec[sec]))
 
 def processAllFiles():
     files=getFiles()
