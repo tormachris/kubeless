@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #Requirements:
 #<function name without dashes>.wrk descriptor file for wrk
 #<function name without dashes>.body (even if you don't need it)
