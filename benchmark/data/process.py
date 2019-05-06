@@ -34,16 +34,22 @@ def processFile(fname):
             else:
                 responseCodes[code]=responseCodes[code]+1
             responseTimes.append(item['response-time'])
-        maxResponse=max(responseTimes)
-        minResponse=min(responseTimes)
+        if len(responseTimes)!=0:
+            maxResponse=max(responseTimes)
+            minResponse=min(responseTimes)
         print("Maximum response time was ",maxResponse)
         print("Minimum response time was ",minResponse)
+        else:
+            print("csv is empty")
         pprint(responseCodes)
         for sec in responsePerSec:
-            print(sec, ":")
-            print("    Maximum:", max(responsePerSec[sec]))
-            print("    Minimum:", min(responsePerSec[sec]))
-            print("    Num of responses:", len(responsePerSec[sec]))
+            if len(responsePerSec[sec])!=0:
+                print(sec, ":")
+                print("    Maximum:", max(responsePerSec[sec]))
+                print("    Minimum:", min(responsePerSec[sec]))
+                print("    Num of responses:", len(responsePerSec[sec]))
+            else:
+                print("    empty")
 
 def processAllFiles():
     files=getFiles()
