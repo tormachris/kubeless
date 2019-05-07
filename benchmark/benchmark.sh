@@ -23,7 +23,8 @@ then
         apt install build-essential libssl-dev git -y
         git clone https://github.com/wg/wrk.git wrk
         cd wrk || exit
-        make
+        cores=$(cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l)
+        make -j $((cores + 1))
         cp wrk /usr/local/bin
 fi
 
