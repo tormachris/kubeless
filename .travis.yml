@@ -6,4 +6,4 @@ addons:
     update: true
     packages: shellcheck
 
-script: "find $HOME -type f -exec "shellcheck" "--format=gcc" {} \;"
+script: "find $HOME -type f -exec \"shellcheck\" \"--format=gcc\" {} \;"
