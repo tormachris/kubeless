@@ -15,5 +15,5 @@ install:
 script:
  - for file in $(find . -type f -name \"*.sh\"); do shellcheck --format=gcc $file; done;
  - cd benchmark/data
- - flake8 --statistics --count
- - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then black --check --diff .; fi
+ #- flake8 --statistics --count
+ #- if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then black --check --diff .; fi
